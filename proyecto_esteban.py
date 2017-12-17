@@ -10,7 +10,7 @@
 #- Obtener la version de PHP analizando las cabeceras de            #done
 #la respuesta a una peticion HTTP
 #
-#- Determinar los metodos HTTP habilitados en el servidor
+#- Determinar los metodos HTTP habilitados en el Servidor           #done
 #
 #- Obtener CMS del servicio web analizando la Respuesta             #done
 #
@@ -19,7 +19,7 @@
 #- Buscar en el servidor archivos/directorios mediante una          #done   
 #lista (cuidado con el historial de redirecciones)
 #
-#- Posibilidad de enviar peticiones a traves de tor 
+#- Posibilidad de enviar peticiones a traves de tor                 #done
 #
 #- Generar reporte en un archivo .text                              #done
 #
@@ -67,6 +67,16 @@ Attributes:
     > -e ............................Obtener los emails
     > -r ............................Determina donde se mostraran los resultados (both | screen)
 
+setup:
+    pip install requests
+    pip install requests[socks]
+    pip install pysocks
+    apt-get install tor
+
+Aditional Notes:
+    Si en algún momento durante el envio de solicitud parece que se traba, solo dejalo correr y
+    eventualmente vuelve a correr
+
 """
 
 
@@ -79,8 +89,16 @@ from bs4 import BeautifulSoup
 from requests.exceptions import ConnectionError
 debug = False
 listofusers = []
+metodos = []
 listoffiles = ['dump.sql', 'root.txt', 'install', 'admin', 'robots.txt', 'index.php', 'repository.git', 'plugin-cfg.xml', 'src', 'img', 'css', 'logs', 'js']
 listofvalidfiles = []
+proxies = {
+    'http': 'socks5://127.0.0.1:9050',
+    'https': 'socks5://127.0.0.1:9050'
+}
+
+
+
 
 def printError(msg, exit = False):
         sys.stderr.write('Error:\t%s\n' % msg)
@@ -107,6 +125,8 @@ def addOptions():
     parser.add_option('-c','--cms', dest='cms_version', default=None, action='store_true', help='If specified, returns the servers  CMS version')
     parser.add_option('-e','--mails', dest='emails', default=None, action='store_true', help='If specified, returns the servers  CMS version')
     parser.add_option('-a','--archivos', dest='archivos', default=None, action='store_true', help='If specified, returns the files founded')
+    parser.add_option('-t','--tor', dest='tor', default=None, action='store_true', help='If specified, stablish a connection using tor')
+    parser.add_option('-m','--methods', dest='methods', default=None, action='store_true', help='If specified, returns all the methods used by the page')
     
 
     opts,args = parser.parse_args()
@@ -154,7 +174,15 @@ def checkOptions(options):
         if debug: print  '[INFO]: Se habilita la deteccion de los correos electronicos...'
     if options.archivos is not None:
         if debug: print '[INFO]: Se habilita la deteccion de archivos en el servidor ...'
-    
+    if options.tor is not None:
+        if debug: print '[INFO]: Se ha habilitado el uso de conexion mediante tor ...'
+    if options.methods is not None:
+        if debug: print '[INFO]: Se ha habilitado la detección de metodos http usados por el servidor ...'
+
+
+
+
+
 
 
 def reportResults(options,response):
@@ -167,12 +195,41 @@ def reportResults(options,response):
 
     soup = BeautifulSoup(response.text,"lxml")
     print (soup.find_all(attrs={"name": "generator"}))
+
     emails = [a["href"] for a in soup.select('a[href^=mailto:]')]
-    print (emails)
+    #print (emails)
+
+    print ('metodos: \n')
+
+    r = requests.get(url)
+    if r.status_code == 200: metodos.append('get')
+    r = requests.post(url)
+    if r.status_code == 200: metodos.append('post')
+    r = requests.head(url)
+    if r.status_code == 200: metodos.append('head')
+    r = requests.put(url)
+    if r.status_code == 200: metodos.append('put') 
+    r = requests.delete(url)
+    if r.status_code == 200: metodos.append('delete')
+    r = requests.options(url)
+    if r.status_code == 200: metodos.append('options')
+    r = requests.get(url)
+    if r.status_code == 200: print metodos.append('trace')
+   
+    for m in metodos:
+        print (m)
+
+
+
+    
+    
+    
+    #<form action="fichero.py/funcion" method="post"
     #print (soup.meta['name'])
     #print ("###############################################")
-    #for sub_heading in soup.find_all('meta'):
-        #if sub_heading['name'] != "generator":
+    #for sub_heading in soup.find_all('form'):
+    #    if sub_heading['action']:
+    #         print (str(soup.find_all('form')))
         #print "\n\n\n$$$$$$$$$$$$$$$$$$$44yeah"
         #print(str(sub_heading) + '\n')
         #print(str(sub_heading.text))
@@ -199,17 +256,28 @@ def reportResults(options,response):
         file_report.write('Url = \t\t'              + response.encoding                 + '\n')
         file_report.write('Codificacion = \t\t'     + response.encoding                 + '\n')
         file_report.write('Status Code = \t\t'      + str(response.status_code)         + '\n')
-        file_report.write('Cookies = \t\t'          + str(response.cookies)             + '\n')
+        #file_report.write('Cookies = \t\t'          + str(response.cookies)             + '\n')
         file_report.write('Cabeceras = \t\t\n')
         file_report.write('Redireccionado? = \t\t'  + str(response.is_redirect)         + '\n')
         file_report.write('Tiempo de Respuesta = '  + str(response.elapsed)             + '\n')
         file_report.write('Historial = \t\t'        + str(response.history)             + '\n') 
         #file_report.write('Texto = \t\t'            + str(response.text)                + '\n') 
         if options.server_version is not None: 
-            file_report.write('Version del Servidor= \t\t:'   + str(response.headers['Server'])    + '\n')
+            file_report.write('Version del Servidor= \t\t:'             + str(response.headers['Server'])       + '\n')
         if options.php_version is not None: 
-            file_report.write('Version de PHP =  \t\t'   + str(response.headers['X-Powered-By'])    + '\n')
-        
+            file_report.write('Version de PHP =  \t\t'                  + str(response.headers['X-Powered-By']) + '\n')
+        if options.emails is not None:
+            file_report.write('Emails encontrados = \t\t'               + str(emails)                           + '\n')
+        if options.archivos is not None:
+            file_report.write('Archivos encontrados = '                 + str(listofvalidfiles)                 + '\n')
+        if options.methods is not None:
+            file_report.write('Metodos usado por el servidor = \t\t'    + str(metodos)                          + '\n')
+        if options.cms_version is not None:
+            if soup.find_all(attrs={"name": "generator"}):
+                file_report.write ('Version del CMS = \t\t ' + str(soup.find_all(attrs={"name": "generator"})))
+            else:
+                file_report.write ('Version del CMS =  ¡NO SE ECONTRO CMS!')
+
 
 
         file_report.close()
@@ -223,28 +291,36 @@ def reportResults(options,response):
     print ('Url = \t\t'              + response.encoding                        + '\n')
     print ('Codificacion = \t\t'     + response.encoding                        + '\n')
     print ('Status Code = \t\t'      + str(response.status_code)                + '\n')
-    print ('Cookies = \t\t')
-    print (response.cookies)  
-    print ('Cabeceras = \t\t')
-    print (response.headers)
     print ('Redireccionado? = \t\t'  + str(response.is_redirect)                + '\n')
-    print ('Tiempo de Respuesta = \t'  + str(response.elapsed)                    + '\n')
-    print ('Historial = \t\t'        + str(response.history)                    + '\n') 
+    print ('Tiempo de Respuesta = \t'  + str(response.elapsed)                  + '\n')
+    print ('Historial = \t\t'        + str(response.history)                    + '\n')
+    #print ('Cookies = \t\t')
+    #print (response.cookies)  
+    #print ('Cabeceras = \t\t')
+    #print (response.headers) 
     if options.server_version is not None: 
-        print ('Version del Sevidor = \t\t'     + str(response.headers['Server'])       + '\n')
+        print ('Version del Sevidor = \t\t'             + str(response.headers['Server'])       + '\n')
     if options.php_version is not None: 
-        print ('Version de PHP = \t\ŧ'                + str(response.headers['X-Powered-By'])       + '\n')
+        print ('Version de PHP = \t\ŧ'                  + str(response.headers['X-Powered-By']) + '\n')
+    if options.emails is not None:
+        print('Emails encontrados = \t\t'               + str(emails)                           + '\n')
+    if options.archivos is not None:
+        print('Archivos encontrados = '                 + str(listofvalidfiles)                 + '\n')
+    if options.methods is not None:
+        print('Metodos usado por el servidor = \t\t'    + str(metodos)                          + '\n')
     if options.cms_version is not None:
         if soup.find_all(attrs={"name": "generator"}):
             print ('Version del CMS = \t\t ' + str(soup.find_all(attrs={"name": "generator"})))
         else:
             print ('Version del CMS =  ¡NO SE ECONTRO CMS!')
-    if options.emails is not None:
-        print('Emails encontrados = ' + str(emails) + '\n')
-    if options.archivos is not None:
-        print('Archivos encontrados = ' + str(listofvalidfiles) + '\n')
 
-
+def get_tor_session():
+    session = requests.sesion()
+    sesion.proxies =    {
+                            'http':     'socks5://localhost:9050',
+                            'https':    'socks5://localhost:9050'
+                        }
+    return session
 
 
 def buildURL(server,port, protocol = 'http',file = ""):
@@ -252,7 +328,14 @@ def buildURL(server,port, protocol = 'http',file = ""):
         Esta metodo sirve para administrar la funcionalidad de las banderas
 
     """
-    url = '%s://%s:%s/%s' % (protocol,server,port,file)
+     #for i in string:
+     #   if (i == '/'):
+     #       bandera = True
+
+    if '/' in server:
+        url = '%s://%s/%s' % (protocol,server,file)
+    else:
+        url = '%s://%s:%s/%s' % (protocol,server,port,file)
     return url
 
 
@@ -261,23 +344,34 @@ def makeRequest(host,digest,opts):
         Esta metodo sirve para realizar las consultas al servidor web
     """
     try:
+            if debug: print '[INFO]: Eviando la solicitud al servidor ...'
             user_agent = {'User-agent': 'Mozilla/5.0'}
-            #response  = requests.get(url, headers = user_agent, config=debug)
-            response = requests.get(host, headers = user_agent)
-            print(response.status_code)
-            if response.status_code == 200:
-                print '[INFO]: Respuesta obtenida con exito '
-            else:
-                print '[INFO]: NO FUNCIONO la respuesta :c '  
-                #print response
-                #print dir(response)
 
-            for archivo in listoffiles:
-                hostforfiles = buildURL(opts.server, port = opts.port,file = archivo)
-                respuesta = requests.get(hostforfiles, headers = user_agent)
-                if respuesta.status_code == 200:
-                    listofvalidfiles.append(archivo)
-                    if debug: print ('[INFO]: Se ha podido localizar al archivo: %s' %archivo)
+            if opts.tor is not None:
+                #Do something related to tor connection
+                print '[INFO]: Enviando solicitud por medio de tor ...'
+                url = 'http://ifconfig.me/ip'   
+
+                response = requests.get(url, proxies=proxies)
+                #print('tor ip: {}'.format(response.text.strip()))
+
+            elif opts.tor is None:
+                #response  = requests.get(url, headers = user_agent, config=debug)
+                response = requests.get(host, headers = user_agent)
+                print(response.status_code)
+                if response.status_code == 200:
+                    print '[INFO]: Respuesta obtenida con exito '
+                else:
+                    print '[INFO]: NO FUNCIONO la respuesta :c '  
+                    #print response
+                    #print dir(response)
+
+                for archivo in listoffiles:
+                    hostforfiles = buildURL(opts.server, port = opts.port,file = archivo)
+                    respuesta = requests.get(hostforfiles, headers = user_agent)
+                    if respuesta.status_code == 200:
+                        listofvalidfiles.append(archivo)
+                        if debug: print ('[INFO]: Se ha podido localizar al archivo: %s' %archivo)
 
       
         
