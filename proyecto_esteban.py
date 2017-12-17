@@ -4,32 +4,32 @@
 
 #Extraccion de informacion de un servidor web
 #
-#- Obtener la version del servidor web analizando las               #done
+#- Obtener la version del servidor web analizando las                               #done
 #cabeceras de la respuesta a una peticion HTTP
 #
-#- Obtener la version de PHP analizando las cabeceras de            #done
+#- Obtener la version de PHP analizando las cabeceras de                            #done
 #la respuesta a una peticion HTTP
 #
-#- Determinar los metodos HTTP habilitados en el Servidor           #done
+#- Determinar los metodos HTTP habilitados en el Servidor                           #done
 #
-#- Obtener CMS del servicio web analizando la Respuesta             #done
+#- Obtener CMS del servicio web analizando la Respuesta                             #done
 #
 #- Extraer todos los correos de la pagina
 #
-#- Buscar en el servidor archivos/directorios mediante una          #done   
+#- Buscar en el servidor archivos/directorios mediante una                          #done   
 #lista (cuidado con el historial de redirecciones)
 #
-#- Posibilidad de enviar peticiones a traves de tor                 #done
+#- Posibilidad de enviar peticiones a traves de tor                                 #done
 #
-#- Generar reporte en un archivo .text                              #done
+#- Generar reporte en un archivo .text                                              #done
 #
-#- Implementar un modo verboso                                      #done
+#- Implementar un modo verboso                                                      #done
 #
-#- Debe implementar un archivo de configuracion en el que se 
+#- Debe implementar un archivo de configuracion en el que se                        #process
 #habiliten o deshabiliten las opciones anteriores (el archivo 
 #se indica a traves de una bandera)
 #
-#- Debe implementar banderas para recibir argumentos desde la       #done
+#- Debe implementar banderas para recibir argumentos desde la                       #done
 #linea de comandos.  Los argumentos tienen prioridad sobre 
 #el archivo de configuracion.
 
@@ -40,9 +40,9 @@
 #    - indicar lista para busqueda de archivos (habilita la busqueda)
 #    - indicar nombre del archivo de reporte
 
-#- Cambiar el agente de usuario por uno indicado en el archivo de configuracion
+#- Cambiar el agente de usuario por uno indicado en el archivo de configuracion     #proces    
 
-#- Manejar excepciones para evitar que el programa termine abruptamente
+#- Manejar excepciones para evitar que el programa termine abruptamente             #process
 
 
 ##############################################################################################
@@ -66,7 +66,9 @@ Attributes:
     > -c ............................Obtener CMS (si lo hay
     > -e ............................Obtener los emails
     > -r ............................Determina donde se mostraran los resultados (both | screen)
-
+    > -t ............................Habilita la solicitudes por tor
+    > -m ............................Habilia la deteccion de metodos http
+    > -a ............................Habilita la busqueda de archivos
 setup:
     pip install requests
     pip install requests[socks]
@@ -74,8 +76,9 @@ setup:
     apt-get install tor
 
 Aditional Notes:
-    Si en algún momento durante el envio de solicitud parece que se traba, solo dejalo correr y
-    eventualmente vuelve a correr
+    >   Si en algún momento durante el envio de solicitud parece que se traba, solo dejalo correr y
+        eventualmente vuelve a correr
+    >   Antes de probar utilice las pruebas que se adjuntan en el archivo pruebas.txt en este repositorio
 
 """
 
@@ -194,12 +197,11 @@ def reportResults(options,response):
     """
 
     soup = BeautifulSoup(response.text,"lxml")
-    print (soup.find_all(attrs={"name": "generator"}))
+    #print (soup.find_all(attrs={"name": "generator"}))
 
     emails = [a["href"] for a in soup.select('a[href^=mailto:]')]
     #print (emails)
 
-    print ('metodos: \n')
 
     r = requests.get(url)
     if r.status_code == 200: metodos.append('get')
@@ -216,8 +218,8 @@ def reportResults(options,response):
     r = requests.get(url)
     if r.status_code == 200: print metodos.append('trace')
    
-    for m in metodos:
-        print (m)
+    #for m in metodos:
+    #    print (m)
 
 
 
@@ -240,7 +242,8 @@ def reportResults(options,response):
         #data_soup.find_all(attrs={"name": "generator"})
 
     
-
+    file_config = open("proyecto_esteban.config","r")
+    renglones = file_config.readlines()
 
 
 
@@ -249,70 +252,83 @@ def reportResults(options,response):
     if options.report == 'both':
         
         file_report = open("file_report.txt","w")
-        
-        file_report.write('================================Reporte===================================')
-        file_report.write('\nSevidor = \t\t'        + str(options.server)               + '\n')
-        file_report.write('Puerto = \t\t'           + options.port                      + '\n')
-        file_report.write('Url = \t\t'              + response.encoding                 + '\n')
-        file_report.write('Codificacion = \t\t'     + response.encoding                 + '\n')
-        file_report.write('Status Code = \t\t'      + str(response.status_code)         + '\n')
+        file_report.write ('\n\n\n\n')
+        file_report.write ('==========================================================================')
+        file_report.write ('================================Reporte===================================')
+        file_report.write ('==========================================================================')
+        file_report.write ('\n\n')
+        file_report.write('\nSevidor = \t\t\t\t'    + str(options.server)               + '\n')
+        file_report.write('Puerto = \t\t\t\t'       + options.port                      + '\n')
+        file_report.write('Url = \t\t\t\t\t'        + response.url                      + '\n')
+        file_report.write('Codificacion = \t\t\t\t' + response.encoding                 + '\n')
+        file_report.write('Status Code = \t\t\t\t'  + str(response.status_code)         + '\n')
         #file_report.write('Cookies = \t\t'          + str(response.cookies)             + '\n')
-        file_report.write('Cabeceras = \t\t\n')
-        file_report.write('Redireccionado? = \t\t'  + str(response.is_redirect)         + '\n')
-        file_report.write('Tiempo de Respuesta = '  + str(response.elapsed)             + '\n')
-        file_report.write('Historial = \t\t'        + str(response.history)             + '\n') 
+        file_report.write('Cabeceras = \t\t\t\n')
+        file_report.write('Redireccionado? = \t\t\t'+ str(response.is_redirect)         + '\n')
+        file_report.write('Respuestan(seg) =\t\t\t '+ str(response.elapsed)             + '\n')
+        file_report.write('Historial = \t\t\t\t'    + str(response.history)             + '\n') 
         #file_report.write('Texto = \t\t'            + str(response.text)                + '\n') 
         if options.server_version is not None: 
-            file_report.write('Version del Servidor= \t\t:'             + str(response.headers['Server'])       + '\n')
+            file_report.write('Version del Servidor= \t\t\t:'           + str(response.headers['Server'])       + '\n')
         if options.php_version is not None: 
-            file_report.write('Version de PHP =  \t\t'                  + str(response.headers['X-Powered-By']) + '\n')
+            file_report.write('Version de PHP =  \t\t\t'                + str(response.headers['X-Powered-By']) + '\n')
         if options.emails is not None:
-            file_report.write('Emails encontrados = \t\t'               + str(emails)                           + '\n')
+            file_report.write('Emails encontrados = \t\t\t'             + str(emails)                           + '\n')
         if options.archivos is not None:
-            file_report.write('Archivos encontrados = '                 + str(listofvalidfiles)                 + '\n')
+            file_report.write('Archivos encontrados = \t\t\t'           + str(listofvalidfiles)                 + '\n')
         if options.methods is not None:
-            file_report.write('Metodos usado por el servidor = \t\t'    + str(metodos)                          + '\n')
+            file_report.write('Metodos usado por el servidor = \t'      + str(metodos)                          + '\n')
         if options.cms_version is not None:
             if soup.find_all(attrs={"name": "generator"}):
-                file_report.write ('Version del CMS = \t\t ' + str(soup.find_all(attrs={"name": "generator"})))
+                file_report.write ('Version del CMS = \t\t\t ' + str(soup.find_all(attrs={"name": "generator"})))
             else:
-                file_report.write ('Version del CMS =  ¡NO SE ECONTRO CMS!')
-
+                file_report.write ('Version del CMS = \t\t\t¡NO SE ECONTRO CMS!')
+        file_report.write ('\n\n')
+        file_report.write ('==========================================================================')
+        file_report.write ('==========================================================================')
+        file_report.write ('\n\n\n\n\n\n')
 
 
         file_report.close()
         #if debug: print 'El contenido de la variable es: '
         #if debug: print debug
         if debug: print '[INFO]: Se ha escrito el reporte en el archivo ./file_report.txt'
-
+    print ('\n\n\n\n')
+    print ('==========================================================================')
     print ('================================Reporte===================================')
-    print ('Sevidor = \t\t'          + options.server                           + '\n')
-    print ('Puerto = \t\t'           + options.port                             + '\n')
-    print ('Url = \t\t'              + response.encoding                        + '\n')
-    print ('Codificacion = \t\t'     + response.encoding                        + '\n')
-    print ('Status Code = \t\t'      + str(response.status_code)                + '\n')
-    print ('Redireccionado? = \t\t'  + str(response.is_redirect)                + '\n')
-    print ('Tiempo de Respuesta = \t'  + str(response.elapsed)                  + '\n')
-    print ('Historial = \t\t'        + str(response.history)                    + '\n')
+    print ('==========================================================================')
+    print ('\n\n')
+    print ('Sevidor = \t\t\t\t'        + options.server                           + '\n')
+    print ('Puerto = \t\t\t\t'         + options.port                             + '\n')
+    print ('Url = \t\t\t\t\t'          + response.url                             + '\n')
+    print ('Codificacion = \t\t\t\t'   + response.encoding                        + '\n')
+    print ('Status Code = \t\t\t\t'    + str(response.status_code)                + '\n')
+    print ('Redireccionado? = \t\t\t'  + str(response.is_redirect)                + '\n')
+    print ('Respuesta (seg) = \t\t\t'  + str(response.elapsed)                    + '\n')
+    print ('Historial = \t\t\t\t'      + str(response.history)                    + '\n')
     #print ('Cookies = \t\t')
     #print (response.cookies)  
     #print ('Cabeceras = \t\t')
     #print (response.headers) 
     if options.server_version is not None: 
-        print ('Version del Sevidor = \t\t'             + str(response.headers['Server'])       + '\n')
+        print ('Version del Sevidor = \t\t\t'             + str(response.headers['Server'])       + '\n')
     if options.php_version is not None: 
-        print ('Version de PHP = \t\ŧ'                  + str(response.headers['X-Powered-By']) + '\n')
+        print ('Version de PHP = \t\t\t'                  + str(response.headers['X-Powered-By']) + '\n')
     if options.emails is not None:
-        print('Emails encontrados = \t\t'               + str(emails)                           + '\n')
+        print('Emails encontrados = \t\t\t'               + str(emails)                           + '\n')
     if options.archivos is not None:
-        print('Archivos encontrados = '                 + str(listofvalidfiles)                 + '\n')
+        print('Archivos encontrados = \t\t\t '            + str(listofvalidfiles)                 + '\n')
     if options.methods is not None:
-        print('Metodos usado por el servidor = \t\t'    + str(metodos)                          + '\n')
+        print('Metodos usado por el servidor = \t'          + str(metodos)                          + '\n')
     if options.cms_version is not None:
         if soup.find_all(attrs={"name": "generator"}):
-            print ('Version del CMS = \t\t ' + str(soup.find_all(attrs={"name": "generator"})))
+            print ('Version del CMS = \t\t\t ' + str(soup.find_all(attrs={"name": "generator"})))
         else:
-            print ('Version del CMS =  ¡NO SE ECONTRO CMS!')
+            print ('Version del CMS =\t\t\t¡NO SE ECONTRO CMS!')
+    print ('\n\n')
+    print ('==========================================================================')
+    print ('==========================================================================')
+    print ('\n\n\n\n\n\n')
 
 def get_tor_session():
     session = requests.sesion()
@@ -321,6 +337,9 @@ def get_tor_session():
                             'https':    'socks5://localhost:9050'
                         }
     return session
+
+def archivo_configuracion():
+
 
 
 def buildURL(server,port, protocol = 'http',file = ""):

@@ -1,0 +1,120 @@
+  315  python proyecto_esteban.py -p 9889 -s 87.118.110.170 -U romina.martinez -P P4ssw0rd123
+  316  python proyecto_esteban.py -p 80 -s 87.118.110.170 -U romina.martinez -P P4ssw0rd123
+  317  python proyecto_esteban.py -p 80 -s 87.118.110.170 
+  318  python proyecto_esteban.py -p 80 -s proteco.mx
+  319  python proyecto_esteban.py -p 80 -s proteco.mx -v
+  321  python proyecto_esteban.py -p 80 -s proteco.mx -v
+  326  python proyecto_esteban.py -p 80 -s proteco.mx -v
+  328  python proyecto_esteban.py -p 80 -s proteco.mx -v
+  330  python proyecto_esteban.py -p 80 -s proteco.mx -v
+  332  python proyecto_esteban.py -p 80 -s proteco.mx -v
+  333  python proyecto_esteban.py -p 80 -s proteco.mx 
+  335  python proyecto_esteban.py -p 80 -s proteco.mx -v
+  337  python proyecto_esteban.py -p 80 -s proteco.mx -v
+  339  python proyecto_esteban.py -p 80 -s proteco.mx -v
+  341  python proyecto_esteban.py -p 80 -s proteco.mx -v
+  343  python proyecto_esteban.py -p 80 -s proteco.mx -v
+  345  python proyecto_esteban.py -p 80 -s proteco.mx -v -w
+  347  python proyecto_esteban.py -p 80 -s proteco.mx -v -w
+  349  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -h
+  350  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j
+  352  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j
+  354  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j
+  356  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j
+  359  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j
+  362  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j
+  364  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j
+  366  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j
+  369  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j
+  371  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j
+  373  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j
+  375  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j
+  377  python proyecto_esteban.py -p 80 -s people.com/style/ -v -w -j
+  379  python proyecto_esteban.py -p 80 -s people.com/style/ -v -w -j
+  382  python proyecto_esteban.py -p 80 -s people.com/style/ -v -w -j
+  384  python proyecto_esteban.py -p 80 -s people.com/style/ -v -w -j
+  386  python proyecto_esteban.py -p 80 -s people.com/style/ -v -w -j
+  389  python proyecto_esteban.py -p 80 -s people.com/style/ -v -w -j
+  391  python proyecto_esteban.py -p 80 -s people.com/style/ -v -w -j
+  393  python proyecto_esteban.py -p 80 -s people.com/style/ -v -w -j
+  395  python proyecto_esteban.py -p 80 -s people.com/style/ -v -w -j
+  397  python proyecto_esteban.py -p 80 -s people.com/style/ -v -w -j
+  399  python proyecto_esteban.py -p 80 -s people.com/style/ -v -w -j
+  401  python proyecto_esteban.py -p 80 -s people.com/style/ -v -w -j
+  403  python proyecto_esteban.py -p 80 -s people.com/style/ -v -w -j
+  405  python proyecto_esteban.py -p 80 -s people.com/style/ -v -w -j
+  407  python proyecto_esteban.py -p 80 -s people.com/ -v -w -j
+  408  python proyecto_esteban.py -p 80 -s people.com -v -w -j
+  410  python proyecto_esteban.py -p 80 -s people.com -v -w -j
+  412  python proyecto_esteban.py -p 80 -s people.com -v -w -j
+  414  python proyecto_esteban.py -p 80 -s people.com -v -w -j
+  416  python proyecto_esteban.py -p 80 -s people.com -v -w -j
+  418  python proyecto_esteban.py -p 80 -s people.com -v -w -j
+  420  python proyecto_esteban.py -p 80 -s people.com -v -w -j
+  422  python proyecto_esteban.py -p 80 -s people.com -v -w -j
+  424  python proyecto_esteban.py -p 80 -s people.com -v -w -j}
+  425  python proyecto_esteban.py -p 80 -s people.com -v -w -j
+  427  python proyecto_esteban.py -p 80 -s people.com -v -w -j
+  429  python proyecto_esteban.py -p 80 -s people.com -v -w -j
+  431  python proyecto_esteban.py -p 80 -s people.com -v -w -j
+  433  python proyecto_esteban.py -p 80 -s people.com -v -w -j
+  436  python proyecto_esteban.py -p 80 -s people.com -v -w -j
+  439  python proyecto_esteban.py -p 80 -s people.com -v -w -j
+  441  python proyecto_esteban.py -p 80 -s people.com -v -w -j
+  443  python proyecto_esteban.py -p 80 -s people.com -v -w -j
+  445  python proyecto_esteban.py -p 80 -s people.com -v -w -j
+  446  python proyecto_esteban.py -p 80 -s people.com -v  -j
+  448  python proyecto_esteban.py -p 80 -s people.com -v  -j
+  450  python proyecto_esteban.py -p 80 -s proteco.mx -v  -j
+  451  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j
+  453  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j
+  455  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j
+  457  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j -c
+  459  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j -c
+  461  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j -c
+  463  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j -c
+  465  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j -c
+  467  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j -c
+  469  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j -c
+  470  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j -c -e
+  472  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j -c -e
+  474  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j -c -e
+  476  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j -c -e
+  479  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j -c -e
+  481  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j -c -e
+  483  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j -c -e
+  485  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j -c -e
+  487  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j -c -e
+  488  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j -c -e -a
+  490  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j -c -e -a
+  492  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j -c -e -a
+  495  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j -c -e -a
+  498  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j -c -e -a
+  500  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j -c -e -a
+  502  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j -c -e -a
+  505  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j -c -e -a -t
+  508  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j -c -e -a -t
+  510  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j -c -e -a -t
+  512  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j -c -e -a -t
+  514  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j -c -e -a -t
+  522  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j -c -e -a -t
+  525  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j -c -e -a -t
+  526  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j -c -e -a 
+  529  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j -c -e -a 
+  531  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j -c -e -a 
+  533  python proyecto_esteban.py -p 80 -s proteco.mx/login -v -w -j -c -e -a 
+  535  python proyecto_esteban.py -p 80 -s proteco.mx/login -v -w -j -c -e -a 
+  537  python proyecto_esteban.py -p 80 -s proteco.mx/login -v -w -j -c -e -a 
+  539  python proyecto_esteban.py -p 80 -s proteco.mx/login -v -w -j -c -e -a 
+  542  python proyecto_esteban.py -p 80 -s proteco.mx/login -v -w -j -c -e -a 
+  544  python proyecto_esteban.py -p 80 -s proteco.mx/login -v -w -j -c -e -a 
+  545  python proyecto_esteban.py -p 80 -s people.com -v -w -j -c -e -a 
+  548  python proyecto_esteban.py -p 80 -s people.com -v -w -j -c -e -a 
+  549  python proyecto_esteban.py -p 80 -s proteco.mx/login -v -w -j -c -e -a 
+  551  python proyecto_esteban.py -p 80 -s proteco.mx/login -v -w -j -c -e -a 
+  553  python proyecto_esteban.py -p 80 -s proteco.mx/login -v -w -j -c -e -a 
+  555  python proyecto_esteban.py -p 80 -s proteco.mx/login -v -w -j -c -e -a 
+  557  python proyecto_esteban.py -p 80 -s proteco.mx/login -v -w -j -c -e -a 
+  558  python proyecto_esteban.py -p 80 -s proteco.mx/login -v -w -j -c -e -a -m
+  560  history | grep proyecto.esteban
+  561  history | grep proyecto.esteban > pruebas.txt
