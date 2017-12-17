@@ -116,5 +116,22 @@
   555  python proyecto_esteban.py -p 80 -s proteco.mx/login -v -w -j -c -e -a 
   557  python proyecto_esteban.py -p 80 -s proteco.mx/login -v -w -j -c -e -a 
   558  python proyecto_esteban.py -p 80 -s proteco.mx/login -v -w -j -c -e -a -m
-  560  history | grep proyecto.esteban
-  561  history | grep proyecto.esteban > pruebas.txt
+  564  python proyecto_esteban.py -p 80 -s proteco.mx/login -v -w -j -c -e -a -m
+  566  python proyecto_esteban.py -p 80 -s proteco.mx/login -v -w -j -c -e -a -m
+  568  python proyecto_esteban.py -p 80 -s proteco.mx/login -v -w -j -c -e -a -m
+  570  python proyecto_esteban.py -p 80 -s proteco.mx/login -v -w -j -c -e -a -m
+  572  python proyecto_esteban.py -p 80 -s proteco.mx/login -v -w -j -c -e -a -m
+  574  python proyecto_esteban.py -p 80 -s proteco.mx/login -v -w -j -c -e -a -m
+  576  python proyecto_esteban.py -p 80 -s proteco.mx/login -v -w -j -c -e -a -m
+  585  python proyecto_esteban.py -p 80 -s proteco.mx/login -v -w -j -c -e -a -m
+  597  python proyecto_esteban.py -p 80 -s proteco.mx/login -v -w -j -c -e -a -m
+  598  python proyecto_esteban.py -p 80 -s proteco.mx/login -v -j -c -e -a -m
+  599  python proyecto_esteban.py -p 80 -s proteco.mx/login -v -j -c -e -a -m -w None
+  601  python proyecto_esteban.py -p 80 -s proteco.mx/login  -j -c -e -a -m -w None
+  602  python proyecto_esteban.py -p 80 -s proteco.mx/login  -j -c -e -a -m -v
+  603  python proyecto_esteban.py -p 80 -s proteco.mx/login -v -j -c -e -a -m -w None
+  604  python proyecto_esteban.py -p 80 -s proteco.mx/login -v -j -c -e -a -m 
+  606  python proyecto_esteban.py -p 80 -s proteco.mx/login -v -j -c -e -a -m 
+  607  python proyecto_esteban.py -p 80 -s proteco.mx/login -v -j -c -a -m 
+  609  history | grep proyecto_esteban.py
+  610  history | grep proyecto_esteban.py > pruebas.txt
