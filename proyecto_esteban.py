@@ -97,6 +97,7 @@ listoffiles = ['dump.sql', 'root.txt', 'install', 'admin', 'robots.txt', 'index.
 listofvalidfiles = []
 lista = []
 dic = {}
+reporte = "file_report.txt"
 proxies = {
     'http': 'socks5://127.0.0.1:9050',
     'https': 'socks5://127.0.0.1:9050'
@@ -151,13 +152,15 @@ def checkOptions(options,dic):
         debug = False
 
     print debug
+    print (dic['cabeceras'])
 
     if options.server is None:
         printError('Debes especificar un servidor a atacar.', True)
     else:
         if debug: print '[INFO]: Se ha registrado el servidor a atacar ...'
-        if debug: print 'Se intenta localizar la configuración de deteccion de cabeceras en archivo de configuración...'
-        if dic['cabeceras'] == 'True\n':
+        
+        
+
 
 
     if options.port is not None:
@@ -170,24 +173,78 @@ def checkOptions(options,dic):
         elif options.report == 'screen':
             if debug: print '[INFO]: Se ha habilitado solo el reporte en pantalla ...'
 
+
     if options.server_version is not None:
         if debug: print '[INFO]: Se habilita la deteccion de la version del servidor ...'
+    else:
+        if debug: print '[INFO]: Se intenta localizar la configuración de deteccion de cabeceras en archivo de configuración...'
+        if dic['cabeceras'] == 'True':
+            if debug: print "[INFO]: Se establece configuración de deteccíon de cabeceras a traves del archivo de configuracion.."
+        else:
+            if debug: print "[INFO]: No se detecto configuración de deteccion de cabeceras en el archivo..."
+            
+
 
     if options.php_version is not None:
         if debug: print '[INFO]: Se habilita la deteccion de la version de PHP ...'
 
     if options.cms_version is not None:
         if debug: print '[INFO]: Se habilita la deteccion de la version de CMS ...'
+
+
+
     if options.emails is not None:
         if debug: print  '[INFO]: Se habilita la deteccion de los correos electronicos...'
+    else:
+        if debug: print '[INFO]: Se intenta localizar la configuración de deteccion de correos en archivo de configuración...'
+        if dic['correos'] == 'True':
+            if debug: print "[INFO]: Se establece configuración de deteccíon de correos a traves del archivo de configuracion.."
+        else:
+            if debug: print "[INFO]: No se detecto configuración de deteccion de correos en el archivo..."
+            
+
+
+
     if options.archivos is not None:
         if debug: print '[INFO]: Se habilita la deteccion de archivos en el servidor ...'
+    else:
+        if debug: print '[INFO]: Se intenta localizar la configuración de deteccion de archivos en archivo de configuración...'
+        if dic['lista'] != ' ':
+            #[PEND] Quiza de error por el salto de linea del final, revisar
+            lista = dic['lista'].split(",")
+            if debug: print "[INFO]: Se establece configuración de deteccion de archivos a traves del archivo de configuracion.."
+        else:
+            if debug: print "[INFO]: No se detecto configuración de deteccion de archivos en el archivo..."
+        
+
+
     if options.tor is not None:
         if debug: print '[INFO]: Se ha habilitado el uso de conexion mediante tor ...'
+    else:
+        if debug: print '[INFO]: Se intenta localizar la configuración de solicitudes con tor en archivo de configuración...'
+        if dic['tor'] == 'True':
+            if debug: print "[INFO]: Se establece configuración de solicitudes con tor a traves del archivo de configuracion.."
+        else:
+            if debug: print "[INFO]: No se detecto configuración de solicitudes con tor en el archivo..."
+        
+
+
     if options.methods is not None:
         if debug: print '[INFO]: Se ha habilitado la detección de metodos http usados por el servidor ...'
+    else:
+        if debug: print '[INFO]: Se intenta localizar la configuración de deteccion de metodos en archivo de configuración...'
+        if dic['metodos'] == 'True':
+            if debug: print "[INFO]: Se establece configuración de deteccíon de metodos a traves del archivo de configuracion.."
+        else:
+            if debug: print "[INFO]: No se detecto configuración de deteccion de metodos en el archivo..."
+        
 
+    if dic['reporte'] != ' ':
+        #[PEND] Quiza de error por el salto de linea del final, revisar
+        reporte = dic['reporte']
 
+    if dic['agent'] != ' ':
+        return dic['agent']
 
 
 
@@ -212,7 +269,7 @@ def reportResults(options,response,dic):
     
     if options.report == 'both':
         
-        file_report = open("file_report.txt","w")
+        file_report = open(reporte,"w")
         file_report.write ('\n\n\n\n')
         file_report.write ('==========================================================================')
         file_report.write ('================================Reporte===================================')
@@ -309,7 +366,7 @@ def archivo_configuracion():
         if '#' not in  line:
             #print (line)
             lista = line.split(':')
-            dic[lista[0]] = lista[1]
+            dic[lista[0]] = lista[1][:-1]
 
     return dic
 
@@ -366,13 +423,16 @@ def buildURL(server,port, protocol = 'http',file = ""):
     return url
 
 
-def makeRequest(host,digest,opts):
+def makeRequest(host,digest,opts,agente_usuario):
     """ 
         Esta metodo sirve para realizar las consultas al servidor web
     """
     try:
             if debug: print '[INFO]: Eviando la solicitud al servidor ...'
-            user_agent = {'User-agent': 'Mozilla/5.0'}
+            #user_agent = {'User-agent': 'Mozilla/5.0'}
+            print (agente_usuario)
+            user_agent = {'User-agent':agente_usuario}
+            print (user_agent)
 
             if opts.tor is not None:
                 #Do something related to tor connection
@@ -413,10 +473,10 @@ if __name__ == '__main__':
     try:
         opts = addOptions()
         config_file = archivo_configuracion()
-        checkOptions(opts,config_file)
+        agente_usuario = checkOptions(opts,config_file)
         url = buildURL(opts.server, port = opts.port)
         print url
-        request1 = makeRequest(url,opts.digest,opts)
+        request1 = makeRequest(url,opts.digest,opts,agente_usuario)
         #print request1
         reportResults(opts,request1,config_file)
     except Exception as e:
