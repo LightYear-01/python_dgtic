@@ -25,12 +25,12 @@
 #
 #- Implementar un modo verboso                                                      #done
 #
-#- Debe implementar un archivo de configuracion en el que se                        #process
+#- Debe implementar un archivo de configuracion en el que se                        #done
 #habiliten o deshabiliten las opciones anteriores (el archivo 
 #se indica a traves de una bandera)
 #
 #- Debe implementar banderas para recibir argumentos desde la                       #done
-#linea de comandos.  Los argumentos tienen prioridad sobre 
+#linea de comandos.  Los argumentos tienen prioridad sobre      
 #el archivo de configuracion.
 
 #    - habilitar analisis de cabeceras
@@ -40,9 +40,9 @@
 #    - indicar lista para busqueda de archivos (habilita la busqueda)
 #    - indicar nombre del archivo de reporte
 
-#- Cambiar el agente de usuario por uno indicado en el archivo de configuracion     #proces    
+#- Cambiar el agente de usuario por uno indicado en el archivo de configuracion     #done   
 
-#- Manejar excepciones para evitar que el programa termine abruptamente             #process
+#- Manejar excepciones para evitar que el programa termine abruptamente             #done
 
 
 ##############################################################################################
@@ -53,6 +53,9 @@
 
 Este software se encarga de realizar consultas a sitios web mediante los metodos definiddos
 en http.
+
+Archivo_Configuracion:
+    proyecto_esteban.txt
 
 Example:
     >>  python proyecto_esteban.py -p 80 -s proteco.mx -v -w -j -c -e -a
@@ -250,7 +253,7 @@ def checkOptions(options,dic):
 
 
 
-def reportResults(options,response,dic):
+def reportResults(options,response,dic,agente_usuario):
     #pass
     """ 
         Esta metodo sirve para reportar al usuario por medio de pantalla
@@ -285,17 +288,35 @@ def reportResults(options,response,dic):
         file_report.write('Redireccionado? = \t\t\t'+ str(response.is_redirect)         + '\n')
         file_report.write('Respuestan(seg) =\t\t\t '+ str(response.elapsed)             + '\n')
         file_report.write('Historial = \t\t\t\t'    + str(response.history)             + '\n') 
+        file_report.write("User Agent = \t\t\t\t"     + str(agente_usuario)                      + '\n')
         #file_report.write('Texto = \t\t'            + str(response.text)                + '\n') 
         if options.server_version is not None: 
             file_report.write('Version del Servidor= \t\t\t:'           + str(response.headers['Server'])       + '\n')
+        else:
+            if dic['cabeceras'] == 'True':
+                file_report.write('Version del Servidor= \t\t\t:'           + str(response.headers['Server'])       + '\n')
+
+
+        if options.emails is not None:
+            file_report.write('Emails encontrados = \t\t\t' + str(emails)+ '\n')
+        else:
+            if dic['correos'] == 'True':
+                file_report.write('Emails encontrados = \t\t\t' + str(emails)+ '\n')
+
+        if options.methods is not None:
+            file_report.write('Metodos usado por el servidor = \t'      + str(metodos) + '\n')
+        else:
+            if dic['metodos'] == 'True':
+                file_report.write('Metodos usado por el servidor = \t'      + str(metodos) + '\n')
+
+
+
         if options.php_version is not None: 
             file_report.write('Version de PHP =  \t\t\t'                + str(response.headers['X-Powered-By']) + '\n')
-        if options.emails is not None:
-            file_report.write('Emails encontrados = \t\t\t'             + str(emails)                           + '\n')
+        
         if options.archivos is not None:
             file_report.write('Archivos encontrados = \t\t\t'           + str(listofvalidfiles)                 + '\n')
-        if options.methods is not None:
-            file_report.write('Metodos usado por el servidor = \t'      + str(metodos)                          + '\n')
+        
         if options.cms_version is not None:
             if soup.find_all(attrs={"name": "generator"}):
                 file_report.write ('Version del CMS = \t\t\t ' + str(soup.find_all(attrs={"name": "generator"})))
@@ -324,20 +345,33 @@ def reportResults(options,response,dic):
     print ('Redireccionado? = \t\t\t'  + str(response.is_redirect)                + '\n')
     print ('Respuesta (seg) = \t\t\t'  + str(response.elapsed)                    + '\n')
     print ('Historial = \t\t\t\t'      + str(response.history)                    + '\n')
+    print ("User Agent = \t\t\t\t"     + str(agente_usuario)                      + '\n')
     #print ('Cookies = \t\t')
     #print (response.cookies)  
     #print ('Cabeceras = \t\t')
     #print (response.headers) 
     if options.server_version is not None: 
-        print ('Version del Sevidor = \t\t\t'             + str(response.headers['Server'])       + '\n')
-    if options.php_version is not None: 
-        print ('Version de PHP = \t\t\t'                  + str(response.headers['X-Powered-By']) + '\n')
+        print ('Version del Sevidor = \t\t\t'+ str(response.headers['Server'])+ '\n')
+    else:
+        if dic['cabeceras'] == 'True':
+                print ('Version del Servidor= \t\t\t:'+ str(response.headers['Server'])+ '\n')
+    
     if options.emails is not None:
-        print('Emails encontrados = \t\t\t'               + str(emails)                           + '\n')
+        print('Emails encontrados = \t\t\t'+ str(emails)+ '\n')
+    else:
+        if dic['correos'] == 'True':
+            print('Emails encontrados = \t\t\t'+ str(emails)+ '\n')
+
+    if options.methods is not None:
+        print('Metodos usado por el servidor = \t'+ str(metodos)+ '\n')
+    else:
+        if dic['metodos'] == 'True':
+            print('Emails encontrados = \t\t\t'+ str(emails)+ '\n')
+
+    if options.php_version is not None: 
+        print ('Version de PHP = \t\t\t'+ str(response.headers['X-Powered-By']) + '\n')       
     if options.archivos is not None:
         print('Archivos encontrados = \t\t\t '            + str(listofvalidfiles)                 + '\n')
-    if options.methods is not None:
-        print('Metodos usado por el servidor = \t'          + str(metodos)                          + '\n')
     if options.cms_version is not None:
         if soup.find_all(attrs={"name": "generator"}):
             print ('Version del CMS = \t\t\t ' + str(soup.find_all(attrs={"name": "generator"})))
@@ -423,26 +457,24 @@ def buildURL(server,port, protocol = 'http',file = ""):
     return url
 
 
-def makeRequest(host,digest,opts,agente_usuario):
+def makeRequest(host,digest,opts,agente_usuario,dic):
     """ 
         Esta metodo sirve para realizar las consultas al servidor web
     """
     try:
             if debug: print '[INFO]: Eviando la solicitud al servidor ...'
             #user_agent = {'User-agent': 'Mozilla/5.0'}
-            print (agente_usuario)
+            #print (agente_usuario)
             user_agent = {'User-agent':agente_usuario}
-            print (user_agent)
+            #print (user_agent)
 
             if opts.tor is not None:
                 #Do something related to tor connection
                 print '[INFO]: Enviando solicitud por medio de tor ...'
-                url = 'http://ifconfig.me/ip'   
-
-                response = requests.get(url, proxies=proxies)
+                #url = 'http://ifconfig.me/ip'   
+                response = requests.get(host, proxies=proxies)
                 #print('tor ip: {}'.format(response.text.strip()))
-
-            elif opts.tor is None:
+            elif opts.tor is None and dic['tor'] != 'True':
                 #response  = requests.get(url, headers = user_agent, config=debug)
                 response = requests.get(host, headers = user_agent)
                 print(response.status_code)
@@ -459,6 +491,10 @@ def makeRequest(host,digest,opts,agente_usuario):
                     if respuesta.status_code == 200:
                         listofvalidfiles.append(archivo)
                         if debug: print ('[INFO]: Se ha podido localizar al archivo: %s' %archivo)
+            else:
+                if dic['tor'] == 'True':
+                    print '[INFO]: Enviando solicitud por medio de tor ...'
+                    response = requests.get(host, proxies=proxies)
 
       
         
@@ -476,9 +512,9 @@ if __name__ == '__main__':
         agente_usuario = checkOptions(opts,config_file)
         url = buildURL(opts.server, port = opts.port)
         print url
-        request1 = makeRequest(url,opts.digest,opts,agente_usuario)
+        request1 = makeRequest(url,opts.digest,opts,agente_usuario,config_file)
         #print request1
-        reportResults(opts,request1,config_file)
+        reportResults(opts,request1,config_file,agente_usuario)
     except Exception as e:
         printError('Ocurrio un error inesperado')
         printError(e, True)
