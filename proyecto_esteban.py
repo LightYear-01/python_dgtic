@@ -95,6 +95,8 @@ listofusers = []
 metodos = []
 listoffiles = ['dump.sql', 'root.txt', 'install', 'admin', 'robots.txt', 'index.php', 'repository.git', 'plugin-cfg.xml', 'src', 'img', 'css', 'logs', 'js']
 listofvalidfiles = []
+lista = []
+dic = {}
 proxies = {
     'http': 'socks5://127.0.0.1:9050',
     'https': 'socks5://127.0.0.1:9050'
@@ -135,7 +137,7 @@ def addOptions():
     opts,args = parser.parse_args()
     return opts
     
-def checkOptions(options):
+def checkOptions(options,dic):
 
     """ 
         Esta metodo sirve para Validar que los datos ingresados sean correctos
@@ -154,6 +156,9 @@ def checkOptions(options):
         printError('Debes especificar un servidor a atacar.', True)
     else:
         if debug: print '[INFO]: Se ha registrado el servidor a atacar ...'
+        if debug: print 'Se intenta localizar la configuración de deteccion de cabeceras en archivo de configuración...'
+        if dic['cabeceras'] == 'True\n':
+
 
     if options.port is not None:
         if debug: print '[INFO]: Se ha escogido el puerto %s ...' %(options.port)
@@ -188,7 +193,7 @@ def checkOptions(options):
 
 
 
-def reportResults(options,response):
+def reportResults(options,response,dic):
     #pass
     """ 
         Esta metodo sirve para reportar al usuario por medio de pantalla
@@ -198,57 +203,13 @@ def reportResults(options,response):
 
     soup = BeautifulSoup(response.text,"lxml")
     #print (soup.find_all(attrs={"name": "generator"}))
-
     emails = [a["href"] for a in soup.select('a[href^=mailto:]')]
     #print (emails)
-
-
-    r = requests.get(url)
-    if r.status_code == 200: metodos.append('get')
-    r = requests.post(url)
-    if r.status_code == 200: metodos.append('post')
-    r = requests.head(url)
-    if r.status_code == 200: metodos.append('head')
-    r = requests.put(url)
-    if r.status_code == 200: metodos.append('put') 
-    r = requests.delete(url)
-    if r.status_code == 200: metodos.append('delete')
-    r = requests.options(url)
-    if r.status_code == 200: metodos.append('options')
-    r = requests.get(url)
-    if r.status_code == 200: print metodos.append('trace')
-   
+    metodos = pruebas_metodos_http()
     #for m in metodos:
     #    print (m)
-
-
-
     
     
-    
-    #<form action="fichero.py/funcion" method="post"
-    #print (soup.meta['name'])
-    #print ("###############################################")
-    #for sub_heading in soup.find_all('form'):
-    #    if sub_heading['action']:
-    #         print (str(soup.find_all('form')))
-        #print "\n\n\n$$$$$$$$$$$$$$$$$$$44yeah"
-        #print(str(sub_heading) + '\n')
-        #print(str(sub_heading.text))
-        #print(soup.meta['content'])
-        #print(sub_heading.text)
-        #print(sub_heading.contents['meta'])
-        #letters = soup.find_all("div", class_="ec_statements")
-        #data_soup.find_all(attrs={"name": "generator"})
-
-    
-    file_config = open("proyecto_esteban.config","r")
-    renglones = file_config.readlines()
-
-
-
-
-
     if options.report == 'both':
         
         file_report = open("file_report.txt","w")
@@ -339,6 +300,53 @@ def get_tor_session():
     return session
 
 def archivo_configuracion():
+    file_config = open("proyecto_esteban.txt","r+")
+    renglones = file_config.readlines()
+    contnido = file_config.read()
+    #print (renglones)
+    #print (contnido)
+    for line in renglones:
+        if '#' not in  line:
+            #print (line)
+            lista = line.split(':')
+            dic[lista[0]] = lista[1]
+
+    return dic
+
+
+def pruebas_metodos_http():
+    r = requests.get(url)
+    if r.status_code == 200: metodos.append('get')
+    r = requests.post(url)
+    if r.status_code == 200: metodos.append('post')
+    r = requests.head(url)
+    if r.status_code == 200: metodos.append('head')
+    r = requests.put(url)
+    if r.status_code == 200: metodos.append('put') 
+    r = requests.delete(url)
+    if r.status_code == 200: metodos.append('delete')
+    r = requests.options(url)
+    if r.status_code == 200: metodos.append('options')
+    r = requests.get(url)
+    if r.status_code == 200: print metodos.append('trace')
+
+    #<form action="fichero.py/funcion" method="post"
+    #print (soup.meta['name'])
+    #print ("###############################################")
+    #for sub_heading in soup.find_all('form'):
+    #    if sub_heading['action']:
+    #         print (str(soup.find_all('form')))
+        #print "\n\n\n$$$$$$$$$$$$$$$$$$$44yeah"
+        #print(str(sub_heading) + '\n')
+        #print(str(sub_heading.text))
+        #print(soup.meta['content'])
+        #print(sub_heading.text)
+        #print(sub_heading.contents['meta'])
+        #letters = soup.find_all("div", class_="ec_statements")
+        #data_soup.find_all(attrs={"name": "generator"})
+
+
+    return metodos
 
 
 
@@ -404,12 +412,13 @@ def makeRequest(host,digest,opts):
 if __name__ == '__main__':
     try:
         opts = addOptions()
-        checkOptions(opts)
+        config_file = archivo_configuracion()
+        checkOptions(opts,config_file)
         url = buildURL(opts.server, port = opts.port)
         print url
         request1 = makeRequest(url,opts.digest,opts)
         #print request1
-        reportResults(opts,request1)
+        reportResults(opts,request1,config_file)
     except Exception as e:
         printError('Ocurrio un error inesperado')
         printError(e, True)

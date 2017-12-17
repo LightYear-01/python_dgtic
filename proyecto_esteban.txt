@@ -1,0 +1,20 @@
+#Archivo de configuracion proyecto_esteban.py
+#
+#
+#Debe implementar un archivo de configuracion en el que se habiliten o deshabiliten las opciones #anteriores (el archivo se indica a traves de una bandera)
+#
+#
+#- Debe implementar banderas para recibir argumentos desde la linea de comandos.  Los argumentos #tienen prioridad sobre el archivo de configuracion.
+#    - habilitar analisis de cabeceras					
+#    - habilitar deteccion de metodos HTTP				
+#    - habilitar extraccion de correos					
+#    - habilitar peticiones a traves de tor				
+#    - indicar lista para busqueda de archivos (habilita la busqueda)	
+#    - indicar nombre del archivo de reporte				
+cabeceras:True
+metodos:True
+correos:True
+tor:True
+lista: 
+reporte: 
+agent: 
